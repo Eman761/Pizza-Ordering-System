@@ -1,0 +1,138 @@
+Pizza.java
+import java.util.ArrayList;
+
+public class Pizza {
+
+    private String size;
+    private ArrayList<String> toppings;
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public ArrayList<String> getToppings() {
+        return toppings;
+    }
+
+    public void setToppings(ArrayList<String> toppings) {
+        this.toppings = toppings;
+    }
+
+    public String toString() {
+        return this.size + " pizza with " + this.getToppings();
+    }
+}
+
+PizzaOrder.java
+import java.util.ArrayList;
+
+public class PizzaOrder {
+    private double totalOrderCost;
+
+    private final ArrayList<Pizza> pizzas;
+
+    public PizzaOrder(ArrayList<Pizza> pizzas) {
+        this.pizzas = pizzas;
+    }
+
+    public void calculateTotalOrderCost() {
+        final double LARGE_COST = 9.99;
+        final double MEDIUM_COST = 7.99;
+        final double SMALL_COST = 5.99;
+        final double COST_PER_TOPPING = 0.5;
+
+        for (Pizza pizza : pizzas) {
+            switch (pizza.getSize()) {
+                case "Large":
+                    totalOrderCost += LARGE_COST;
+                    break;
+                case "Medium":
+                    totalOrderCost += MEDIUM_COST;
+                    break;
+                case "Small":
+                    totalOrderCost += SMALL_COST;
+                    break;
+                default:
+                    totalOrderCost += 0.0;
+                    break;
+            }
+
+            int totalToppings = pizza.getToppings().size();
+            totalOrderCost += totalToppings * COST_PER_TOPPING;
+        }
+    }
+
+    public double getTotalOrderCost() {
+        return totalOrderCost;
+    }
+
+    public void printOrderSummary() {
+        for (Pizza pizza : pizzas) {
+            System.out.println("Ordered a " + pizza.getSize() + " pizza with " +    pizza.getToppings());
+        }
+        System.out.println("TOTAL ORDER AMOUNT: " + getTotalOrderCost());
+    }
+}
+
+PizzaOrderDriver.java
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class PizzaOrderDriver {
+
+    public static void printWelcomeMessage() {
+        System.out.println("------------------------------------");
+        System.out.println("Welcome to the Pizza Ordering System 761!");
+        System.out.println("------------------------------------");
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        printWelcomeMessage();
+
+        ArrayList<Pizza> pizzas = new ArrayList<>();
+
+        System.out.println("Enter the total pizzas you would like to order: ");
+        int totalPizzas = scanner.nextInt();
+
+        // Reading input regarding pizza size and pizza toppings
+        for (int i = 0; i < totalPizzas; ++i) {
+            Pizza pizza = new Pizza();
+
+            ArrayList<String> toppings = new ArrayList<>();
+
+            String pizzaSize;
+            System.out.println("Enter the size of the pizza Large, Medium, Small: ");
+            pizzaSize = scanner.next();
+            pizza.setSize(pizzaSize);
+
+            int totalToppings;
+            System.out.println("Enter the total amount of toppings on the pizza: ");
+            totalToppings = scanner.nextInt();
+
+            for (int j = 0; j < totalToppings; ++j) {
+                System.out.println("Enter the topping: ");
+                String topping = scanner.next();
+                toppings.add(topping);
+            }
+
+            pizza.setToppings(toppings);
+            pizzas.add(pizza);
+        }
+
+
+        // Creating PizzaOrder object and relevant information with regards to order
+        PizzaOrder order = new PizzaOrder(pizzas);
+        order.calculateTotalOrderCost();
+        order.printOrderSummary();
+
+
+        // Cleanup
+        scanner.close();
+    }
+}
